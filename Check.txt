@@ -1,2 +1,5 @@
 1. Сделать локальную папку TEMP
 2. Пройти шаги на https://www.hostinger.com/tutorials/basic-git-commands кроме git clone
+2.1.$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
+2.2.  
