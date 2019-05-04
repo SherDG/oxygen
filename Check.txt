@@ -1,1 +1,2 @@
-Check
+1. Сделать локальную папку TEMP
+2. Пройти шаги на https://www.hostinger.com/tutorials/basic-git-commands кроме git clone
