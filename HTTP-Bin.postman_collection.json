@@ -1,0 +1,262 @@
+{
+	"info": {
+		"_postman_id": "0b09d188-60d2-4ddf-9675-74dae78bbc54",
+		"name": "HTTP-Bin",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Request With Params",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6d18a2b8-4122-4951-9e98-cc4aa83e45ed",
+						"exec": [
+							"postman.clearEnvironmentVariable(\"access_token\");",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"//tests[\"User created successfully\"] = jsonData.message === 'User created successfully.';",
+							"",
+							"tests[\"Response time is less than 200ms\"] = responseTime < 800;",
+							"",
+							"tests[\"Content-Type is present\"] = postman.getResponseHeader(\"Content-Type\");",
+							"tests[\"Content-Type is 'application/json'\"] = postman.getResponseHeader(\"Content-Type\") === 'application/json';"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "C-Foo",
+						"value": "Bar",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"user11111\",\n\t\"password\": \"abcxyz\"\n}"
+				},
+				"url": {
+					"raw": "https://httpbin.org/get?name=John&age=32&email=sherdg@i.ua",
+					"protocol": "https",
+					"host": [
+						"httpbin",
+						"org"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "John"
+						},
+						{
+							"key": "age",
+							"value": "32"
+						},
+						{
+							"key": "email",
+							"value": "sherdg@i.ua"
+						}
+					]
+				},
+				"description": "https://httpbin.org/get?name=John&age=32&email=sherdg@i.ua"
+			},
+			"response": []
+		},
+		{
+			"name": "Post Request(orderId from uuidGet)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "fb23dcb8-e68b-4ce2-a762-96f88beb71c0",
+						"exec": [
+							"const customerID =  Math.floor((Math.random()*100)+1);",
+							"pm.globals.set(\"customerID\", customerID);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5f059693-415a-49c9-ac01-50645d70c4db",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check Customer ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.json.customerID).to.eql(pm.globals.get(\"customerID\"));",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check Product ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.json.products[0].productID).to.eql(343423);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"orderID\":\"{{orderID}}\",\n\"customerID\":{{customerID}},\n\"products\":[\n\t{\n\t\t\"productID\":343423,\n\t\t\"quantity\":{{$randomInt}}\n\t},\n\t{\n\t\t\"productID\":34423,\n\t\t\"quantity\":{{$randomInt}}\n\t}\n\t]\n\n}"
+				},
+				"url": {
+					"raw": "httpbin.org/post",
+					"host": [
+						"httpbin",
+						"org"
+					],
+					"path": [
+						"post"
+					]
+				},
+				"description": "httpbin.org/post"
+			},
+			"response": []
+		},
+		{
+			"name": "Login / Auth With Token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "any",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "httpbin.org/bearer",
+					"host": [
+						"httpbin",
+						"org"
+					],
+					"path": [
+						"bearer"
+					]
+				},
+				"description": "httpbin.org/bearer"
+			},
+			"response": []
+		},
+		{
+			"name": "uuid GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "10c14d95-8c2c-4954-86c3-af86be020d2e",
+						"exec": [
+							"const response = pm.response.json();",
+							"pm.globals.set(\"orderID\", response.uuid);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "httpbin.org/uuid",
+					"host": [
+						"httpbin",
+						"org"
+					],
+					"path": [
+						"uuid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "First Task",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "My Agent",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.nytimes.com/svc/books/v3/lists.json?api-key=xj07Kqq91QEEZwKMb9X9s5mNCA7uekeW&list=hardcover-nonfiction&rank=1&published-date=2010-01-01&rank-last-week=5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"nytimes",
+						"com"
+					],
+					"path": [
+						"svc",
+						"books",
+						"v3",
+						"lists.json"
+					],
+					"query": [
+						{
+							"key": "api-key",
+							"value": "xj07Kqq91QEEZwKMb9X9s5mNCA7uekeW"
+						},
+						{
+							"key": "list",
+							"value": "hardcover-nonfiction"
+						},
+						{
+							"key": "rank",
+							"value": "1"
+						},
+						{
+							"key": "published-date",
+							"value": "2010-01-01"
+						},
+						{
+							"key": "rank-last-week",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
